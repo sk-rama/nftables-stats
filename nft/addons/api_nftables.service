@@ -1,0 +1,23 @@
+[Unit]
+Description=FastAPI nftables API
+After=network.target
+
+[Service]
+Environment="IP_BIND=192.168.221.195"
+Environment="IP_PORT=8080"
+Environment="ACCESS_LOG=/var/log/fastapi/uvicorn-access.log"
+Environment="ERROR_LOG=/var/log/fastapi/uvicorn-error.log"
+Environment="TLS_PEM=/etc/ssl/wildcard.secar.cz.pem"
+Environment="TLS_KEY=/etc/ssl/wildcard.secar.cz.pem"
+Environment="TLS_VER=TLSv1_1"
+
+#Type=forking
+#Restart=always
+User=www-data
+Group=www-data
+
+WorkingDirectory=/var/www/html/api_nftables/nft
+ExecStart=/var/www/html/api_nftables/.venv/bin/uvicorn --workers 4 --host $IP_BIND --port $IP_PORT --access-log --app-dir /var/www/html/api_nftables/nft/ main:app
+
+[Install]
+WantedBy=multi-user.target
